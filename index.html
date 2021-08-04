@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en"  style="background-color:seashell;">
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    
+    <link rel="icon" href="tennis.png">
+    <title>Score Keeper</title>
+</head>
+<body>
+    <center>
+    <div class="container" style="margin-top: 2.2%;">
+        <div class="columns">
+            <div class="column is-half is-offset-one-quarter">
+                <div class="card">
+                    <div class="card-image">
+                        <figure class="image is-2by1">
+                            <img src="https://media.giphy.com/media/l378nQAeexVYyjqs8/giphy.gif" alt="">
+                        </figure>
+                    </div>
+                    <header class="card-header">
+                      <p class="card-header-title is-size-3 has-text-info-dark">
+                       Tennis Score Keeper
+                      </p>
+                      <div  class="select is-rounded is-large">
+                        Game point
+                        <select name="" id="playTo">
+                            <option value="3">3</option>
+                            <option value="5">5</option>
+                            <option value="7">7</option>
+                            <option value="9">9</option>
+                            <option value="11">11</option>
+                            <option value="13">13</option>
+                            <option value="15">15</option>
+                        </select>
+                        </div>
+                    </header>
+                    <div class="card-content">
+                      <div class="content">
+                        <h1 class="title is-size-1"><span id="p1Display">0</span><span> to </span><span id="p2Display">0</span></h1>
+                        <p class="subtitle">
+                            Use buttons to Update scores
+                        </p>
+                        <br>
+                      </div>
+                    </div>
+                    <footer class="card-footer">
+                        <button id="p1Button" class="button is-primary card-footer-item is-large">+1 Player One</button>
+                        <button id="p2Button" class="button is-secondary card-footer-item is-large">+1 Player Two</button>
+                        <button id="reset" class="button is-dark card-footer-item is-large">Reset</button>
+                        
+                    </footer>
+                  </div>
+            </div>
+        </div>
+    </div>
+</center>
+    <script>
+        const p1 = {
+            score : 0,
+            button : document.querySelector("#p1Button"),
+            display : document.querySelector("#p1Display")
+        }
+        const p2 = {
+            score : 0,
+            button : document.querySelector("#p2Button"),
+            display : document.querySelector("#p2Display")
+        }
+        const Reset = document.querySelector("#reset");
+        let winningScoreSelect = document.querySelector("#playTo");
+        let winningScore = parseInt(winningScoreSelect.value);
+        let isGameOver = false;
+
+        function updateScores(player, opponent){
+            if(!isGameOver){
+                player.score += 1;
+                if(player.score === winningScore){
+                    isGameOver = true;
+                    player.display.classList.add("has-text-success");
+                    opponent.display.classList.add("has-text-danger");
+                    player.button.disabled = true;
+                    opponent.button.disabled = true;
+                }
+                Reset.disabled = false;
+                player.display.textContent = player.score;
+            }
+
+        }
+        p1.button.addEventListener("click",()=>{
+           updateScores(p1,p2);
+        })
+        p2.button.addEventListener("click",()=>{
+           updateScores(p2,p1);
+        })
+        
+        Reset.addEventListener("click",reset);
+       
+        winningScoreSelect.addEventListener("change",()=>{
+            winningScore = parseInt(this.value);
+            reset();
+        })
+
+        function reset(){
+            isGameOver = false;
+            Reset.disabled = true;
+            for(let p of [p1,p2]){
+                p.score = 0
+                p.display.textContent = 0;
+                winningScore = parseInt(winningScoreSelect.value);
+                p.display.classList.remove('has-text-danger','has-text-success');
+                p.button.disabled = false;
+            }
+            
+        }
+
+    </script>
+</body>
+</html>
